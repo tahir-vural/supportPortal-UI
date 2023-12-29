@@ -1,0 +1,162 @@
+<nav class="navbar topbar navbar-expand-lg navbar-dark">
+   <a class="navbar-brand head-title" style="color:white;">İlçe</a>
+
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
+      aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+   </button>
+
+   <div class="collapse navbar-collapse" id="navbarColor02">
+      <ul class="navbar-nav mr-auto">
+         <li class="nav-item active">
+            <!-- add District button -->
+            <a class="nav-link" (click)="onOpenModal(null, 'add')">İlçe Ekle <span
+                  class="sr-only">(current)</span></a>
+         </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+         <input type="search" (ngModelChange)="search(key.value)" #key="ngModel" ngModel name="key" id="searchName"
+            class="form-control mr-sm-2" placeholder="İlçe ara..." required>
+      </form>
+   </div>
+</nav>
+
+<!--Show data  -->
+<div class="container" id="main-container">
+   <div class="row">
+      <div *ngFor="let district of districts" class="col-md-6 col-xl-3">
+         <div class="card m-b-30">
+            <div class="card-body row">
+               <div class="col-4 card-title align-self-center mb-0">
+                  <h5>{{district?.name | titlecase}}</h5>
+               </div>
+
+            </div>
+            <ul class="list-group list-group-flush">
+               <li class="list-group-item"><i class="fa fa-envelope float-right"></i><strong>Şehir adı
+                      : </strong>{{district.city.name}} </li>
+            </ul>
+            <div class="card-body">
+               <div class="float-right btn-group btn-group-sm">
+                  <!-- edit District button-->
+                  <a (click)="onOpenModal(district, 'edit')" class="btn btn-primary tooltips" data-placement="top"
+                     data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                  <!-- delete District button -->
+                  <a (click)="onOpenModal(district, 'delete')" class="btn btn-secondary tooltips" data-placement="top"
+                     data-original-title="Delete"><i class="fa fa-times"></i></a>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Add District Modal -->
+   <div class="modal fade" id="addDistrictModal" tabindex="-1" role="dialog" aria-labelledby="addDistrictModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="addDistrictModalLabel">İlçe Ekle</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <form #addForm="ngForm" (ngSubmit)="onAddDistrict(addForm)">
+
+                  <!-- inpute name of district -->
+                  <div class="form-group">
+                     <label for="name">İlçe Adı</label>
+                     <input type="text" ngModel name="name" class="form-control" id="name" placeholder="İlçe adı"
+                        required>
+                  </div>
+                  <!-- select city form cities list -->
+                  <div class="form-group">
+                     <select [ngModel]="selectedDistrict?.city?.id" name="cityId" id="cityId" class="form-control">
+                        <option *ngFor="let city of cities" [ngValue]="city.id">{{city.name}}</option>
+                     </select>
+                  </div>
+
+                  <div class="modal-footer">
+                     <button type="button" id="add-District-form" class="btn btn-secondary"
+                        data-dismiss="modal">Kapat</button>
+                     <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Kayıt Et</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Edit Modal -->
+   <div class="modal fade" id="updateDistrictModal" tabindex="-1" role="dialog" aria-labelledby="districtEditModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="updateDistrictModalLabel">{{editDistrict?.name}} İlçesini Düzenle </h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <form #editForm="ngForm">
+                  <!-- Edit the name of district -->
+                  <div class="form-group">
+                     <label for="name">İlçe Adı</label>
+                     <input type="text" [ngModel]="editDistrict?.name" name="name" class="form-control" id="name"
+                        aria-describedby="emailHelp" placeholder="İlçe adı">
+                  </div>
+                  <!-- id is hiddren taken -->
+                  <input type="hidden" [ngModel]="editDistrict?.id" name="id" class="form-control" id="id"
+                     placeholder="Email">
+
+                  <!-- Selected city from city list -->
+                  <div class="form-group">
+                     <select [ngModel]="selectedDistrict?.city?.id" name="cityId" id="cityId" class="form-control">
+                        <option *ngFor="let city of cities" [ngValue]="city.id" >
+                           {{city?.name}}</option>
+                     </select>
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Kapat</button>
+                     <button (click)="onUpdateDistrict(editForm)" data-dismiss="modal"
+                        class="btn btn-primary">Kayıt Et</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Delete Modal -->
+   <div class="modal fade" id="deleteDistrictModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="deleteModelLabel">İlçe Silme</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p> {{deleteDistrict?.name}} ilçesini silmek ister misiniz?</p>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Hayır</button>
+                  <button (click)="onDeleteDistrict(deleteDistrict.id)" class="btn btn-danger"
+                     data-dismiss="modal">Evet</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Notification for no Districts -->
+<div *ngIf="districts?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+   <div class="alert alert-info" role="alert">
+      <h4 class="alert-heading">No District!</h4>
+      <p>No Districts were found.</p>
+   </div>
+</div>

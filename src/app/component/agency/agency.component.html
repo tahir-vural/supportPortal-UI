@@ -1,0 +1,160 @@
+<nav class="navbar topbar navbar-expand-lg navbar-dark ">
+   <a class="navbar-brand ml-1 head-title" style="color:white;">Şubeler</a>
+
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
+      aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+   </button>
+   <div class="collapse navbar-collapse" id="navbarColor02">
+      <ul class="navbar-nav mr-auto">
+         <li class="nav-item active">
+            <!-- add Agency button -->
+            <a class="nav-link" (click)="onOpenModal(null, 'add')">Şube Ekle <span class="sr-only">(current)</span></a>
+         </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+         <input type="search" (ngModelChange)="search(key.value)" #key="ngModel" ngModel name="key" id="searchName"
+            class="form-control mr-sm-2" placeholder="Şube ara..." required>
+      </form>
+   </div>
+</nav>
+<!--Show data  -->
+<div class="container" id="main-container">
+   <div class="row">
+      <div *ngFor="let agency of agencies" class="col-md-6 col-xl-3">
+         <div class="card m-b-30">
+            <div class="card-body row">
+               <div class="col-4 card-title align-self-center mb-0">
+                  <h5>{{agency?.agencyName | titlecase}}</h5>
+               </div>
+            </div>
+            <ul class="list-group list-group-flush">
+               <li class="list-group-item"><i class="fa fa-envelope float-right"></i><strong>Mahalle :
+                  </strong>{{agency?.neighbourhoodId?.name}} </li>
+               <li class="list-group-item"><i class="fa fa-envelope float-right"></i><strong>İlçe :
+                  </strong>{{agency?.neighbourhoodId?.district?.name}} </li>
+               <li class="list-group-item"><i class="fa fa-envelope float-right"></i><strong>İl :
+                  </strong>{{agency?.neighbourhoodId?.district?.city?.name}} </li>
+            </ul>
+            <div class="card-body">
+               <div class="float-right btn-group btn-group-sm">
+                  <!-- edit Agency button-->
+                  <a (click)="onOpenModal(agency, 'edit')" class="btn btn-primary tooltips" data-placement="top"
+                     data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                  <!-- delete Agency button -->
+                  <a (click)="onOpenModal(agency, 'delete')" class="btn btn-secondary tooltips" data-placement="top"
+                     data-original-title="Delete"><i class="fa fa-times"></i></a>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Add Agency Modal -->
+   <div class="modal fade" id="addAgencyModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="addEmployeeModalLabel">Şube Ekle</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <form #addForm="ngForm" (ngSubmit)="onAddAgency(addForm)">
+                  <div class="form-group">
+                     <label for="agencyName">Şube Adı</label>
+                     <input type="text" ngModel name="agencyName" class="form-control" id="agencyName"
+                        placeholder="Şube adı" required>
+                  </div>
+                  <!-- Neighbourhood -->
+                  <div class="form-group">
+                     <label for="neighbourhoodId">Mahalle</label>
+                     <select [ngModel]="selectedNeighbourhood?.id" name="neighbourhoodId" id="neighbourhoodId"
+                        class="form-control" required>
+                        <option *ngFor="let neighbourhood of neighbourhoods" [ngValue]="neighbourhood.id">
+                           {{neighbourhood?.name}}</option>
+                     </select>
+                  </div>
+
+                  <div class="modal-footer">
+                     <button type="button" id="add-Agency-form" class="btn btn-secondary"
+                        data-dismiss="modal">Kapat</button>
+                     <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Kayıt Et</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Edit Modal -->
+   <div class="modal fade" id="updateAgencyModal" tabindex="-1" role="dialog" aria-labelledby="employeeEditModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="updateEmployeeModalLabel">{{editAgency?.agencyName}} Şubesini düzenle</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <form #editForm="ngForm">
+                  <div class="form-group">
+                     <label for="name">Şube Adı</label>
+                     <input type="text" [ngModel]="editAgency?.agencyName" name="agencyName" class="form-control"
+                        id="agencyName" aria-describedby="emailHelp" placeholder="Şube adı">
+                  </div>
+                  <input type="hidden" [ngModel]="editAgency?.id" name="id" class="form-control" id="id">
+
+                  <div class="form-group">
+                     <label for="name">Mahalle</label>
+                     <select [ngModel]="editAgency?.neighbourhoodId?.id" name="neighbourhoodId" id="neighbourhoodId"
+                        class="form-control">
+                        <option *ngFor="let neighbourhood of neighbourhoods" [ngValue]="neighbourhood?.id">
+                           {{neighbourhood?.name}}</option>
+                     </select>
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Kapat</button>
+                     <button (click)="onUpdateAgency(editForm)" data-dismiss="modal" class="btn btn-primary">Kayıt
+                        Et</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Delete Modal -->
+   <div class="modal fade" id="deleteAgencyModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="deleteModelLabel">Delete Employee</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p><strong>{{deleteAgency?.agencyName}}</strong> şubesini silmek istediğinizden emin misiniz??</p>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                  <button (click)="onDeleteAgency(deleteAgency.id)" class="btn btn-danger"
+                     data-dismiss="modal">Yes</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Notification for no employees -->
+<div *ngIf="agencies?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+   <div class="alert alert-info" role="alert">
+      <h4 class="alert-heading">Şube Bulunamadı!</h4>
+      <p>Herhangi bir şube Bulunamadı.</p>
+   </div>
+</div>

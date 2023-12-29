@@ -1,0 +1,67 @@
+@import 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css';
+@import 'https://use.fontawesome.com/releases/v5.8.1/css/all.css';
+@import '~angular-notifier/styles';
+
+td {
+    cursor: pointer;
+}
+
+.move-right {
+    position: absolute;
+    right: 0;
+}
+
+.move-left {
+    position: absolute;
+    left: 0;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100%;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.topbar {
+    min-height: 55px;
+    background-color: #212529;
+    border-bottom: 2px solid red;
+}
+
+.topbar a {
+    color: white;
+    margin: auto;
+    padding: .4em;
+}
+
+.head-title {
+    text-align: center;
+    min-width: 100px;
+    border-bottom-right-radius: 20px;
+    border-bottom: 3px outset red;
+    text-align: left;
+}
+
+.navbar-collapse {
+    padding-left: 2em;
+}
+
+
+.modal-dialog {
+    border-radius: 5px;
+    box-shadow: 0 0 0.5em 0.1em red;
+}

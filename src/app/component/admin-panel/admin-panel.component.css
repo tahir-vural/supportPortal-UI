@@ -1,0 +1,173 @@
+.main {
+    margin: 0;
+    padding: 0;
+}
+
+.active {
+    border-right: 10px solid red;
+    transition: 300ms;
+}
+
+#menu-button {
+    display: none;
+    position: fixed;
+    color: white;
+    z-index: 200;
+    font-size: 1.4em;
+    margin: .5em;
+    border-radius: 5px;
+    box-shadow: 0 0 0.01em 0.01em red;
+    padding: .2em 0.5em;
+    background-color: #212529;
+}
+
+s.header a {
+    text-decoration: none;
+    color: white;
+    margin-left: 30px;
+    font-size: 1.3em;
+    padding: .4em;
+}
+
+.nav-side {
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: fixed;
+    width: 150px;
+    background-color: #212529;
+    padding-top: 4.23em;
+    transition: ease-in-out 500ms;
+}
+
+.content {
+    margin-left: 150px;
+    transition: ease-in-out 500ms;
+    z-index: 0;
+}
+
+.header {
+    top: 0;
+    background-color: #212529;
+    width: 100%;
+    position: fixed;
+    color: white;
+    z-index: 1;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid red;
+}
+
+.header h3 {
+    margin-left: 20px;
+}
+
+.nav-side ul li ul {
+    display: none;
+}
+
+.nav-side ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    transition: ease-in-out 500ms;
+}
+
+.nav-side ul li {
+    border-bottom: 1px solid gray;
+    transition: 300ms ease-in;
+}
+
+.nav-side ul li:hover {
+    background-color: rgb(54, 57, 59);
+    max-height: 57px;
+}
+
+.nav-side ul li a:hover {
+    color: #039be5;
+    border-right: 10px solid #039be5;
+}
+
+.nav-side ul li a {
+    color: white;
+    padding: 1em;
+    text-decoration: none;
+    width: 150px;
+    margin: 0;
+    transition: 300ms ease-in;
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav-side ul li:hover>ul {
+    display: inline-block;
+    transform: translate(150px, -56px);
+    z-index: 0;
+
+}
+
+.nav-side ul ul li:hover {
+    border-bottom: 2px solid #039be5;
+}
+
+.nav-side ul ul li {
+    width: 150px;
+    float: none;
+    display: list-item;
+    position: relative;
+    background-color: #212529;
+    border-bottom: 2px solid red;
+}
+
+.hiden-menu {
+    height: 100%;
+    position: fixed;
+    width: 150px;
+    background-color: rgb(54, 57, 59, 0.5);
+    left: 0;
+    top: 0;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    padding-top: 4.23em;
+    transition: ease-in-out 500ms;
+}
+
+.topbar {
+    min-height: 55px;
+    background-color: #212529;
+    border-bottom: 2px solid red;
+}
+
+.topbar a {
+    color: white;
+    font-size: 1.4em;
+    margin: auto;
+    padding: .4em;
+}
+
+@media only screen and (max-width: 700px) {
+    .nav-side {
+        background-color: rgb(54, 57, 59,0.8);
+    }
+
+    .content {
+        margin-left: 0;
+        transition: ease-in-out 500ms;
+    }
+
+    .hide{
+        width: 0;
+        display: none;
+    }
+
+
+    #menu-button {
+        display: inline;
+        transition: ease-in-out 500ms;
+    }
+
+}

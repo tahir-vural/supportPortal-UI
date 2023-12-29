@@ -1,0 +1,144 @@
+<nav class="navbar topbar navbar-expand-lg navbar-dark ">
+    <a class="navbar-brand head-title" style="color:white;">Birim</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
+        aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor02">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <!-- add Currency button -->
+                <a class="nav-link" (click)="onOpenModal(null, 'add')">Para Birimi Ekle<span
+                        class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input type="search" (ngModelChange)="search(key.value)" #key="ngModel" ngModel name="key" id="searchName"
+                class="form-control mr-sm-2" placeholder="Para birimi ara..." required>
+        </form>
+    </div>
+</nav>
+
+<!--Show data  -->
+<div class="container" id="main-container">
+    <div class="row">
+        <div *ngFor="let currency of currencies" class="col-md-6 col-xl-3">
+            <div class="card m-b-30">
+                <div class="card-body row">
+                    <div class="col-4 card-title align-self-center mb-0">
+                        <h5> {{currency?.currency| uppercase}}</h5>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <div class="float-right btn-group btn-group-sm">
+                        <!-- edit Currency button-->
+                        <a (click)="onOpenModal(currency, 'edit')" class="btn btn-primary tooltips" data-placement="top"
+                            data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                        <!-- delete Currency button -->
+                        <a (click)="onOpenModal(currency, 'delete')" class="btn btn-secondary tooltips"
+                            data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add currency Modal -->
+    <div class="modal fade" id="addCurrencyModal" tabindex="-1" role="dialog" aria-labelledby="addCurrencyModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCurrencyModalLabel">Para Birimi Ekle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form #addForm="ngForm" (ngSubmit)="onAddCurrency(addForm)">
+                        <div class="form-group">
+                            <label for="currency">Para Birimi</label>
+                            <input type="text" ngModel name="currency" class="form-control" id="currency" placeholder="Para birimi"
+                                required>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="add-currency-form" class="btn btn-secondary"
+                                data-dismiss="modal">Kapat</button>
+                            <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Kayıt Et
+                                </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit currency Modal -->
+    <div class="modal fade" id="updateCurrencyModal" tabindex="-1" role="dialog"
+        aria-labelledby="currencyEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateCurrencyModalLabel">{{editCurrency?.currency}} Para Birimini Düzenle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form #editForm="ngForm">
+
+                        <div class="form-group">
+                            <label for="currency">Para Birimi</label>
+                            <input type="text" ngModel="{{editCurrency?.currency}}" name="currency" class="form-control"
+                                id="currency" aria-describedby="emailHelp" placeholder="Para Birimi">
+                        </div>
+
+                        <input type="hidden" ngModel="{{editCurrency?.id}}" name="id" class="form-control" id="id">
+                        <div class="modal-footer">
+                            <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Kapat</button>
+                            <button (click)="onUpdateCurrency(editForm.value)" data-dismiss="modal"
+                                class="btn btn-primary">Kayıt Et
+                                </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteCurrencyModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModelLabel">{{deleteCurrency?.currency}} Para Birimini Sil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>{{deleteCurrency?.currency}} para birimini silmek ister misiniz?</p>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hayır</button>
+                        <button (click)="onDeleteCurrency(deleteCurrency.id)" class="btn btn-danger"
+                            data-dismiss="modal">Evet</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification for no currency -->
+<div *ngIf="currencies?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">No Currency!</h4>
+        <p>No Currencies were found.</p>
+    </div>
+</div>

@@ -1,0 +1,173 @@
+@import 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css';
+@import 'https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css';
+
+body {
+  background: #f5f5f5;
+}
+
+a {
+  cursor: pointer;
+}
+
+.navbar {
+  margin-bottom: 30px;
+}
+
+.card {
+  border: none;
+  -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
+  margin-bottom: 30px;
+}
+
+.w-60 {
+  width: 60px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 10px;
+  font-weight: 600;
+}
+
+.social-links li a {
+  -webkit-border-radius: 50%;
+  background-color: rgba(89, 206, 181, .85);
+  border-radius: 50%;
+  color: #fff;
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  width: 30px;
+  font-size: 12px;
+}
+
+a {
+  color: #707070;
+}
+
+i {
+  color: white;
+}
+
+a {
+  color: white;
+}
+
+.card {
+  box-shadow: 0 0 0.2em 0.06em gray;
+}
+
+.card-body {
+  height: 10vh;
+}
+
+.row {
+  width: 100%;
+}
+
+.col-6 {
+  width: 100%;
+  padding: 0;
+}
+
+.card-title h5 {
+  width: 25vh;
+  margin: 0;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* .navbar-list {
+  display: block;
+} */
+
+.navbar .collapse .navbar-nav .nav-item .checkbox-items:hover {
+  color: green;
+  transition: 300ms;
+}
+.mr-auto{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+/* .collapse{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+} */
+
+.search-input {
+  width: 100%;
+}
+
+
+.searchbar {
+  width: 40%;
+  margin-right: 15%;
+  margin-left: 10%;
+}
+
+
+.price-label {
+  color: white;
+  border-radius: 3px;
+  box-shadow: 0 0 0.1em white;
+  background-color: #212529;
+  position: relative;
+  margin: auto;
+  width: 120px;
+  margin-top: -12px;
+  margin-bottom: 10px;
+}
+
+.price-filtering {
+  border-radius: 3px;
+  box-shadow: 0 0 0.1em white;
+}
+.price-class {
+  margin: 0;
+  width: 100%;
+}
+.price-md{
+  width: 100%;
+  padding: 0.2em 1em 1em 1em ;
+  display: flex;
+}
+.form-inline{
+  margin: 2px;
+  padding: 0;
+  width: 48%;
+}
+.my-content{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.error-label{
+  color: red;
+  border-radius: 3px;
+  box-shadow: 0 0 0.1em red;
+  background-color: #212529;
+  margin: auto;
+  width: 55%;
+  margin-bottom: -12px;
+  margin-top: 10px;
+  transition: 300ms;
+}

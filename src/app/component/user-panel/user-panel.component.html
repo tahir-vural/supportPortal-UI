@@ -1,0 +1,1242 @@
+<nav class="navbar topbar navbar-expand-lg navbar-dark ">
+   <a class="nav-item nav-link " style="font-size: 2em; margin:0; padding:0em 0.3em;" data-toggle="tab"
+      (click)="onSelect(null,'profile-selected')">
+      <i class="fa fa-user"></i>
+   </a>
+   <a class="nav-item nav-link " style="color:white;" data-toggle="tab" (click)="onSelect(false,'main-page-selected')">
+      <i class="fa fa-home"></i>
+      Ana Sayfa
+   </a>
+   <a [hidden]="!isAdminOrManagerOrHR" class="nav-item nav-link  ml-2" data-toggle="tab"
+      (click)="onSelect(null,'my-home-selected')" style="color:white">
+      <i class="fa fa-list"></i>
+      Emlaklarım
+   </a>
+   <a class="nav-item nav-link  ml-2" data-toggle="tab" (click)="onSelect(null,'requested-menu-selected')"
+      style="color:white;">
+      <i class="fa fa-tablet"></i>
+      Talepler
+   </a>
+
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
+      aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+   </button>
+   <div class="collapse navbar-collapse" id="navbarColor02">
+      <ul class="navbar-nav mr-auto">
+         <li class="nav-item active">
+            <a [hidden]="!addButton" class="nav-item nav-link " (click)="onOpenModal(null, 'add')">
+               <i class="fa fa-plus"></i>
+               Emlak Ekle<span class="sr-only">(Mevcut)</span>
+            </a>
+            <a [hidden]="!addRequestButton" class="nav-item nav-link "
+               (click)="onOpenRequestedModal('add-requested-home', 'add')">
+               <i class="fa fa-plus"></i>
+               Talep Ekle<span class="sr-only">(Mevcut)</span>
+            </a>
+         </li>
+      </ul>
+   </div>
+   <div class="nav nav-pills">
+      <a hidden class="nav-item nav-link active ml-1" id="main-page-selected" data-toggle="tab" href="#show-types">
+         <i class="fa fa-users"></i>
+      </a>
+      <a hidden class="nav-item  nav-link" id="my-home-selected" data-toggle="tab" href="#show-my-home-list">
+         <i class="fa fa-cogs"></i></a>
+      <a hidden class="nav-item  nav-link" id="type-selected" data-toggle="tab" href="#show-status">
+         <i class="fa fa-cogs"></i></a>
+      <a hidden class="nav-item  nav-link" id="status-selected" data-toggle="tab" href="#show-home-type">
+         <i class="fa fa-cogs"></i></a>
+      <a hidden class="nav-item  nav-link" id="home-type-selected" data-toggle="tab" href="#show-homes">
+         <i class="fa fa-cogs"></i></a>
+      <a hidden class="nav-item  nav-link" id="profile-selected" data-toggle="tab" href="#show-profile">
+         <i class="fa fa-cogs"></i></a>
+      <a hidden class="nav-item  nav-link" id="requested-menu-selected" data-toggle="tab" href="#show-requested">
+         <i class="fa fa-cogs"></i></a>
+      <a hidden class="nav-item  nav-link" id="requested-menu-home-selected" data-toggle="tab"
+         href="#show-requested-homes">
+         <i class="fa fa-cogs"></i></a>
+   </div>
+
+   <div class="collapse navbar-collapse" id="navbarColor02">
+      <div [hidden]="!filterRoomNumberShow">
+         <ul class="navbar-nav mr-auto roomFiltering">
+            <li class=" active " *ngFor="let roomNumber of roomNumbers">
+               <a class="nav-item nav-link checkbox-items" id="{{'box'+roomNumber.id}}"
+                  (click)="onSelect(roomNumber,'check-box')"><span
+                     style="font-size: 1.5em;">{{roomNumber.roomNumber}}</span>
+               </a>
+               <input (change)="roomNumberOnSelectChange($event)" hidden type="checkbox"
+                  id="{{'check-box'+roomNumber.id}}">
+            </li>
+         </ul>
+      </div>
+      <div [hidden]="!filterRoomNumberShow">
+         <form class="form-inline searchbar my-2 my-lg-0">
+            <input type="search" (keyup)="generalSearch($event)" #key="ngModel" ngModel name="key"
+               id="generalSearchName" class="form-control search-input mr-sm-2" placeholder="Genel emlak ara..."
+               required>
+         </form>
+      </div>
+      <div [hidden]="!addButton">
+         <form class="form-inline searchbar my-2 my-lg-0">
+            <input type="search" (keyup)="userHomeSearch($event)" #key="ngModel" ngModel name="key" id="userSearchName"
+               class="form-control search-input mr-sm-2" placeholder="Genel emlak ara..." required>
+         </form>
+      </div>
+      <div [hidden]="!filterRequestedHomesRoomNumberShow">
+         <ul class="navbar-nav mr-auto roomFiltering">
+            <li class=" active " *ngFor="let roomNumber of roomNumbers">
+               <a class="nav-item nav-link checkbox-items" id="{{'check-box-'+roomNumber.id}}"
+                  (click)="onSelect(roomNumber,'requested-check-box')"> <span
+                     style="font-size: 1.5em;">{{roomNumber.roomNumber}}</span>
+               </a>
+               <input (change)="requestedCheckboxOnChange($event)" hidden type="checkbox"
+                  id="{{'requested-check-box-'+roomNumber.id}}">
+            </li>
+         </ul>
+      </div>
+      <div [hidden]="!filterRequestedHomesRoomNumberShow">
+         <form class="form-inline searchbar my-2 my-lg-0">
+            <input type="search" (keyup)="requestedHomesSearch($event)" #key="ngModel" ngModel name="key"
+               id="requestedHomesSearchName" class="form-control search-input mr-sm-2" placeholder="Emlak Arama..."
+               required>
+         </form>
+      </div>
+   </div>
+   <!-- <div class="collapse navbar-collapse" id="navbarColor02">
+      <div [hidden]="!filterRoomNumberShow" class="price-md">
+         <input type="number" ngModel #minPrice="ngModel" (ngModelChange)="priceFiltering(minPrice.value,'minimum')"
+            (keypress)="inputValidationControl($event)" name="minPrice" id="searchName"
+            class=" form-control search-input mr-sm-2 price-class" placeholder="Min TL" required>
+         <input type="number" ngModel #maxPrice="ngModel" (ngModelChange)="priceFiltering(maxPrice.value,'maximum')"
+            (keypress)="inputValidationControl($event)" name="maxPrice" id="searchName"
+            class=" form-control search-input mr-sm-2 price-class" placeholder="Max TL" required>
+      </div>
+   </div> -->
+</nav>
+
+<div class="tab-content mt-3" id="myTabContent">
+   <!-- select types -->
+   <div class="tab-pane fade show active" id="show-types">
+      <div class="container" id="main-container">
+         <div class="row">
+            <div *ngFor="let type of types" class="col-md-6 col-xl-3" (click)="onSelect(type,'type-selected')">
+               <div class="card m-b-30">
+                  <div class="card-body row">
+                     <div class=" card-title">
+                        <h5>
+                           {{type?.type}} </h5>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div *ngIf="types?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+         <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Tür Yok!</h4>
+            <p>Herhangi bir tür yönetici tarafından eklenmedi.</p>
+         </div>
+      </div>
+   </div>
+   <!-- select status -->
+   <div class="tab-pane fade" id="show-status">
+      <div class="container" id="main-container">
+         <div class="row">
+            <div *ngFor="let status of statuses" class="col-md-6 col-xl-3" (click)="onSelect(status,'status-selected')">
+               <div class="card m-b-30">
+                  <div class="card-body row">
+                     <div class=" card-title">
+                        <h5><i class="fa fa-envelope float-right"></i>
+                           {{status?.status}} </h5>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div *ngIf="statuses?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+         <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Tür Yok!</h4>
+            <p>Herhangi bir emlak durumu yönetici tarafından eklenmedi.</p>
+         </div>
+      </div>
+   </div>
+   <!-- select hometype -->
+   <div class="tab-pane fade" id="show-home-type">
+      <div class="container" id="main-container">
+         <div class="row">
+            <div *ngFor="let homeType of homeTypes" class="col-md-6 col-xl-3"
+               (click)="onSelect(homeType,'home-type-selected')">
+               <div class="card m-b-30">
+                  <div class="card-body row">
+                     <div class=" card-title">
+                        <h5><i class="fa fa-envelope float-right"></i>
+                           {{homeType?.homeType}} </h5>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div *ngIf="homeTypes?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+         <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Emlak Türü Yok!</h4>
+            <p>Herhangi bir emlak türü yönetici tarafından eklenmedi .</p>
+         </div>
+      </div>
+   </div>
+   <!-- General homes -->
+   <div class="tab-pane fade" id="show-homes">
+      <div class="container" id="main-container">
+         <div class="row">
+            <div *ngFor="let home of filteredHome" class="col-md-6 col-xl-3">
+               <div class="card m-b-30" (click)="onSelect(home,'openGeneralHomeInfo')">
+                  <ul class="list-group list-group-flush">
+                     <li class="list-group-item">
+                        <h6><span [style]="'color:green;'">{{home?.header}} - </span><span
+                              [style]="'color:red;'">{{home?.status?.status}}</span></h6>
+                        <h6><span [style]="'color:black;'">{{home?.price}} {{home?.currency?.currency}}</span></h6>
+                        <h6><span [style]="'color:black;'">{{home?.roomNumber?.roomNumber}} -
+                              {{home?.floorNumber}}</span></h6>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+         <button [hidden]="true" type="button" id="openGeneralHomeInfo" data-toggle="modal"
+            data-target="#viewGeneralHomeModal"></button>
+         <!--modal home info -->
+         <div class="modal fade bd-example-modal-lg" id="viewGeneralHomeModal" tabindex="-1" role="dialog"
+            aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label=" Close">
+                        <span aria-hidden="true">&times;</span>
+                     </button>
+                  </div>
+                  <div class="modal-body ">
+                     <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Fiyat : </strong>
+                           {{selectedHome?.price}} - {{selectedHome?.currency?.currency}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>İl-İlçe :
+                           </strong>
+                           {{selectedHome?.neighbourhood?.district?.name}}
+                           {{selectedHome?.neighbourhood?.name}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Oda Sayısı :
+                           </strong>
+                           {{selectedHome?.roomNumber?.roomNumber}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Tür : </strong>
+                           {{selectedHome?.type?.type}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Şube : </strong>
+                           {{selectedHome?.user?.agency?.agencyName}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Adres : </strong>
+                           {{selectedHome?.address}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Açıklama :
+                           </strong>
+                           <span [hidden]="isLink(selectedHome?.details)">
+                              {{selectedHome?.details}}
+                           </span>
+                           <span [hidden]="!isLink(selectedHome?.details)">
+                              <a href="{{selectedHome?.details}}" style="color: black;" >{{selectedHome?.details}}</a></span>
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Kat Sayısı:
+                           </strong>
+                           {{selectedHome?.totalFloor}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>İlan Yetkilisi:
+                           </strong>
+                           {{selectedHome?.user?.firstName}} {{selectedHome?.user?.lastName}}
+                        </li>
+                     </ul>
+                  </div>
+                  <div class=" modal-footer">
+                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div *ngIf="filteredHome?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+         <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Emlak!</h4>
+            <p>Herhangi bir sonuç bulunmadı.</p>
+         </div>
+      </div>
+   </div>
+   <!-- show user data -->
+   <div class="tab-pane fade" id="show-my-home-list">
+      <div class="container" id="main-container">
+         <div class="row">
+            <div *ngFor="let home of userHomeLists" class="col-md-6 col-xl-3">
+               <div class="card m-b-30 show-home">
+                  <li class="list-group-item" (click)="onSelect(home,'openHomeInfo')">
+                     <h6><span [style]="'color:green;'">{{home?.header}} - </span> <span [style]="'color:red;'">
+                           {{home?.status?.status}}</span></h6>
+                     <h6><span [style]="'color:black;'">{{home?.price}} {{home?.currency?.currency}}</span></h6>
+                     <h6><span [style]="'color:black;'">{{home?.roomNumber?.roomNumber}} - {{home?.floorNumber}}</span>
+                     </h6>
+                  </li>
+                  <div class="card-body">
+                     <div class="float-right btn-group btn-group-sm">
+                        <a (click)="onOpenModal(home, 'edit')" class="btn btn-primary tooltips" data-placement="top"
+                           data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                        <a (click)="onOpenModal(home, 'delete')" class="btn btn-secondary tooltips" data-placement="top"
+                           data-original-title="Delete"><i class="fa fa-times"></i></a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <button [hidden]="true" type="button" id="openHomeInfo" data-toggle="modal"
+            data-target="#viewHomeModal"></button>
+         <button [hidden]="true" type="button" id="openUserEdit" data-toggle="modal"
+            data-target="#editUserModal"></button>
+         <!--modal home info -->
+         <div class="modal fade bd-example-modal-lg" id="viewHomeModal" tabindex="-1" role="dialog" aria-labelledby=""
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 style="color: green; text-align: left;">
+                        {{selectedHome?.status?.status}}
+                     </h5>
+                     <button type="button" class="close" data-dismiss="modal" aria-label=" Close">
+                        <span aria-hidden="true">&times;</span>
+                     </button>
+                  </div>
+                  <div class="modal-body">
+                     <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Fiyat : </strong>
+                           {{selectedHome?.price}} - {{selectedHome?.currency?.currency}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>İl-İlçe :
+                           </strong>
+                           {{selectedHome?.neighbourhood?.district?.name}}
+                           {{selectedHome?.neighbourhood?.name}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Oda Sayısı :
+                           </strong>
+                           {{selectedHome?.roomNumber?.roomNumber}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Tür : </strong>
+                           {{selectedHome?.type?.type}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Şube : </strong>
+                           {{selectedHome?.user?.agency?.agencyName}}
+                        </li>
+
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Bulunduğu Kat: </strong>
+                           {{selectedHome?.floorNumber}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Kat Sayısı:
+                           </strong>
+                           {{selectedHome?.totalFloor}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Portföy Yetkilisi: </strong>
+                           {{selectedHome?.user?.firstName}} - {{selectedHome?.user?.lastName}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Açıklama :
+                           </strong>
+                           <span [hidden]="isLink(selectedHome?.details)">
+                              {{selectedHome?.details}}
+                           </span>
+                           <span [hidden]="!isLink(selectedHome?.details)">
+                              <a href="{{selectedHome?.details}}" style="color: black;" >{{selectedHome?.details}}</a></span>
+                        </li>
+
+                     </ul>
+                  </div>
+                  <div class=" modal-footer">
+                     <button type="button" id="homeInfoId" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <!-- Add HomeType Modal -->
+         <div class="modal fade" id="addHomeModal" tabindex="-1" role="dialog" aria-labelledby="addHomeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="addHomeModalLabel">Emlak Ekleme</h5>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                     </button>
+                  </div>
+                  <div class="modal-body">
+                     <form #addForm="ngForm" (ngSubmit)="onAddHome(addForm)">
+                        <div class="form-group">
+                           <label for="header">İl-İlçe</label>
+                           <input type="text" ngModel name="header" class="form-control" id="addHomeheaderId"
+                              placeholder="Başlık Giriniz" required>
+                        </div>
+                        <div class="form-group">
+                           <label for="price">Fiyat</label>
+                           <input type="text" (keypress)="controlValue($event)" ngModel name="price"
+                              class="form-control" id="addHomePriceId" placeholder="500,000" required>
+                           <label for="currencyId">Birim</label>
+                           <select [ngModel]="selectedCurrency?.id" name="currencyId" id="addHomeCurrencyId"
+                              class="form-control" required>
+                              <option *ngFor="let currency of currencies" [ngValue]="currency.id">
+                                 {{currency.currency}} </option>
+                           </select>
+                        </div>
+
+                        <div [hidden]="true" class="form-group">
+                           <label for="neighbourhoodId">İl - İlçe - Mah</label>
+                           <select [ngModel]="selectedNeighbourhood?.id" name="neighbourhoodId"
+                              id="addHomeNeighbourhoodId" class="form-control" required>
+                              <option *ngFor="let neighbourhood of neighbourhoods" [ngValue]="neighbourhood.id">
+                                 {{neighbourhood.district.city.name}} - {{neighbourhood.district.name}} -
+                                 {{neighbourhood.name}} </option>
+                           </select>
+                        </div>
+
+                        <div class="form-group">
+                           <label for="typeId">Tür</label>
+                           <select [ngModel]="selectedType?.id" name="typeId" id="addHomeTypeId" class="form-control"
+                              required>
+                              <option *ngFor="let type of types" [ngValue]="type.id">
+                                 {{type.type}} </option>
+                           </select>
+                        </div>
+
+                        <div class="form-group">
+
+                           <label for="roomNumberId">Oda Sayısı</label>
+                           <select [ngModel]="selectedRoomNumber?.id" name="roomNumberId" id="addHomeRoomNumberId"
+                              class="form-control" required>
+                              <option *ngFor="let roomNumber of roomNumbers" [ngValue]="roomNumber.id">
+                                 {{roomNumber.roomNumber}} </option>
+                           </select>
+                        </div>
+
+                        <div class="form-group">
+                           <label for="homeType">Emlak Türü</label>
+                           <select [ngModel]="selectedHomeType?.id" name="homeTypeId" id="addHomeHomeTypeId"
+                              class="form-control" required>
+                              <option *ngFor="let homeType of homeTypes" [ngValue]="homeType.id">
+                                 {{homeType.homeType}} </option>
+                           </select>
+                        </div>
+
+                        <div class="form-group">
+                           <label for="statusId">Durum</label>
+                           <select [ngModel]="selectedStatus?.id" name="statusId" id="addHomeStatusId"
+                              class="form-control" required>
+                              <option *ngFor="let status of statuses" [ngValue]="status.id">
+                                 {{status.status}}</option>
+                           </select>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                           <label for="floorNumber">Bulunduğu Kat</label>
+                           <input type="number" ngModel name="floorNumber" class="form-control" id="floorNumberId"
+                              placeholder="Bulunduğu kat" required>
+                        </div>
+                        <div class="form-group">
+                           <input [hidden]="true" [ngModel]="user.userId" name="userId" id="userDataUserId"
+                              class="form-control">
+                        </div>
+                        <div class="form-group">
+                           <label for="totalFloor">Kat Sayısı</label>
+                           <input type="number" ngModel name="totalFloor" class="form-control" id="addHomeTotalFloorId"
+                              placeholder="Kat sayısı" required>
+                        </div>
+                        <div [hidden]="true" class="form-group">
+                           <label for="address">Adres : </label>
+                           <textarea type="text" [style]="'resize:none;'" ngModel name="address" class="form-control"
+                              id="addHomeAddressId" placeholder="Adres..."></textarea>
+                        </div>
+                        <div class="form-group">
+                           <label for="details">Açıklama : </label>
+                           <textarea type="text" ngModel [style]="'resize:none;'" name="details" class="form-control"
+                              id="addHomeDetailsId" placeholder="Açıklama..." required></textarea>
+                        </div>
+
+                        <div class="modal-footer">
+                           <button type="button" id="add-home-form" class="btn btn-secondary"
+                              data-dismiss="modal">Kapat</button>
+                           <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Kayıt Et</button>
+                        </div>
+
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!-- Edit Modal -->
+         <div class="modal fade" id="updateHomeModal" tabindex="-1" role="dialog"
+            aria-labelledby="HomeTypeEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="updateHomeTypeModalLabel">Emlak Güncelle {{editHome?.homeType}}</h5>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                     </button>
+                  </div>
+                  <div class="modal-body">
+                     <form #editForm="ngForm">
+                        <div class="form-group">
+                           <label for="header">Başlık</label>
+                           <input type="text" [ngModel]="editHome?.header" name="header" class="form-control"
+                              id="editHeaderId" placeholder="Başlık Giriniz" required>
+                        </div>
+                        <!-- Price and Currency -->
+                        <div class="form-group">
+                           <label for="price">Fiyat : </label>
+                           <input type="text" (keypress)="controlValue($event)" [ngModel]="editHome?.price" name="price"
+                              class="form-control" id="editHomePriceId" placeholder="500,000" required>
+                           <!-- select Currency -->
+                           <label for="currencyId">Birim : </label>
+                           <select [ngModel]="editHome?.currency?.id" name="currencyId" id="editCurrencyId"
+                              class="form-control">
+                              <option *ngFor="let currency of currencies" [ngValue]="currency.id">
+                                 {{currency.currency}} </option>
+                           </select>
+                        </div>
+                        <!-- select City-District-Neighbourhood -->
+                        <div class="form-group">
+                           <label for="neighbourhoodId">İl - İlçe - Mah : </label>
+                           <select [ngModel]="editHome?.neighbourhood?.id" name="neighbourhoodId"
+                              id="editHomeNeighbourhoodId" class="form-control">
+                              <option *ngFor="let neighbourhood of neighbourhoods" [ngValue]="neighbourhood.id">
+                                 {{neighbourhood.district.city.name}} - {{neighbourhood.district.name}} -
+                                 {{neighbourhood.name}} </option>
+                           </select>
+                        </div>
+                        <!-- select Type -->
+                        <div class="form-group">
+                           <label for="typeId">Tip : </label>
+                           <select [ngModel]="editHome?.type?.id" name="typeId" id="editTypeId" class="form-control">
+                              <option *ngFor="let type of types" [ngValue]="type.id">
+                                 {{type.type}} </option>
+                           </select>
+                        </div>
+                        <!-- select Room number -->
+                        <div class="form-group">
+                           <label for="roomNumberId">Oda Sayısı : </label>
+                           <select [ngModel]="editHome?.roomNumber?.id" name="roomNumberId" id="editHomeRoomNumberId"
+                              class="form-control">
+                              <option *ngFor="let roomNumber of roomNumbers" [ngValue]="roomNumber.id">
+                                 {{roomNumber.roomNumber}} </option>
+                           </select>
+                        </div>
+                        <!-- select Home type -->
+                        <div class="form-group">
+                           <label for="homeTypeId">Emlak Tipi: </label>
+                           <select [ngModel]="editHome?.homeType?.id" name="homeTypeId" id="editHomeHomeTypeId"
+                              class="form-control">
+                              <option *ngFor="let homeType of homeTypes" [ngValue]="homeType.id">
+                                 {{homeType.homeType}} </option>
+                           </select>
+                        </div>
+                        <!-- select User  -->
+                        <div class="form-group">
+                           <input [hidden]="true" [ngModel]="user.userId" name="userId" id="userDataEditUserId"
+                              class="form-control">
+                        </div>
+                        <!-- select Status  -->
+                        <div class="form-group">
+                           <label for="statusId">Durum : </label>
+                           <select [ngModel]="editHome?.status?.id" name="statusId" id="editHomeStatusId"
+                              class="form-control">
+                              <option *ngFor="let status of statuses" [ngValue]="status.id">
+                                 {{status.status}}</option>
+                           </select>
+                        </div>
+                        <hr>
+                        <!-- floor Number  -->
+                        <div class="form-group">
+                           <label for="floorNumber">Bulunduğu Kat</label>
+                           <input type="number" [ngModel]="editHome?.floorNumber" name="floorNumber"
+                              class="form-control" id="editfloorNumberId" placeholder="Bulunduğu kat" required>
+                        </div>
+                        <!-- Total floor   -->
+                        <div class="form-group">
+                           <label for="totalFloor">Kat Sayısı</label>
+                           <input type="number" [ngModel]="editHome?.totalFloor" name="totalFloor" class="form-control"
+                              id="editTotalFloorId" placeholder="Kat sayısı" required>
+                        </div>
+                        <!-- Address Input -->
+                        <div [hidden]="true" class="form-group">
+                           <label for="address">Adres : </label>
+                           <textarea type="text" [ngModel]="editHome?.address" name="address" class="form-control"
+                              [style]="'resize:none;'" id="editModelAddressId" placeholder="Adres..."></textarea>
+                        </div>
+                        <!-- Details Input -->
+                        <div class="form-group">
+                           <label for="details">Açıklama : </label>
+                           <textarea type="text" [ngModel]="editHome?.details" name="details" class="form-control"
+                              [style]="'resize:none;'" id="editModelDetails" placeholder="Açıklama..."
+                              required></textarea>
+                        </div>
+                        <input type="hidden" ngModel="{{editHome?.id}}" name="id" class="form-control" id="editHomeId">
+                        <div class="modal-footer">
+                           <button type="button" id="ediModelId" data-dismiss="modal"
+                              class="btn btn-secondary">Kapat</button>
+                           <button (click)="onUpdateHome(editForm)" data-dismiss="modal" class="btn btn-primary">Kayıt
+                              et</button>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!-- Delete Modal -->
+         <div class="modal fade" id="deleteHomeModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+               <!-- User HomeType -->
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="deleteModelLabel">Emlak Silme</h5>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                     </button>
+                  </div>
+                  <!-- Button -->
+                  <div class="modal-body">
+                     <p> Emlağı silmek ister misiniz?</p>
+                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hayır</button>
+                        <button (click)="onDeleteHome(deleteHome.id)" class="btn btn-danger"
+                           data-dismiss="modal">Evet</button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div *ngIf="userHomeLists?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+         <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Emlak!</h4>
+            <p>Herhangi bir sonuç bulunmadı.</p>
+         </div>
+      </div>
+   </div>
+   <!-- user profile -->
+   <div class="tab-pane" id="show-profile">
+      <div class="container">
+         <div class="row flex-1g-nowrap">
+            <div class="col">
+               <div class="row">
+                  <div class="col mb-3">
+                     <div class="card">
+                        <div class="card-body">
+                           <div class="e-profile">
+                              <div class="row">
+                                 <div class="col-12 col-sm-auto">
+                                    <div class="mx-auto" style="width: 120px;">
+                                       <div class="d-flex justify-content-center align-items-center rounded">
+                                          <img class="rounded" height="135" width="135" src="{{user?.profileImageUrl}}"
+                                             alt="">
+                                       </div>
+                                       <div *ngIf="fileStatus?.status==='progress'" class="progress mt-1">
+                                          <div class="progress-bar bg-info" role="progressbar"
+                                             [style.width.%]="fileStatus?.percentage" aria-valuenow="0"
+                                             aria-valuemin="0" aria-valuemax="100">
+                                             {{ fileStatus?.percentage }}%</div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
+                                    <div class="text-center text-sm-left mb-2 mb-sm-0">
+                                       <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{user?.firstName}}
+                                          {{user?.lastName}}</h4>
+                                       <p class="mb-2">{{user?.username}}</p>
+                                       <div *ngIf="user?.lastLoginDateDisplay !== null" class="text-muted">
+                                          <small>Son Giriş:
+                                             {{user?.lastLoginDateDisplay | date:'medium'}}</small>
+                                       </div>
+                                       <div class="mt-2">
+                                          <button (click)="updateProfileImage()" class="btn btn-primary" type="button">
+                                             <i class="fa fa-fw fa-camera"></i>
+                                             <span>Fotoğrafı değiştir</span>
+                                          </button>
+                                       </div>
+                                       <div class="mt-2">
+                                          <button class="btn btn-info" (click)="passwordChangeClick( 'add')">
+                                             <i class="fa fa-key"></i>
+                                             <span> Şifre Değiştir</span>
+                                          </button>
+                                       </div>
+                                    </div>
+                                    <div class="text-center text-sm-right">
+                                       <div class="text-muted">
+                                          <small>katıldı {{user?.joinDate | date:
+                                             'mediumDate'}}</small>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="tab-content pt-3">
+                                 <div class="tab-pane active">
+                                    <form #profileUserForm="ngForm" (ngSubmit)="onUpdateCurrentUser(profileUserForm)"
+                                       class="form" novalidate>
+                                       <div class=" row">
+                                          <div class="col">
+                                             <div class="row">
+                                                <div class="col">
+                                                   <div class="form-group">
+                                                      <label>Adı</label>
+                                                      <input type="text" name="firstName" required
+                                                         [(ngModel)]="user.firstName" class="form-control">
+                                                   </div>
+                                                </div>
+                                                <div class="col">
+                                                   <div class="form-group">
+                                                      <label>Soyadı</label>
+                                                      <input type="text" name="lastName" required
+                                                         [(ngModel)]="user.lastName" class="form-control">
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div class="row">
+                                                <div class="col">
+                                                   <div class="form-group">
+                                                      <label>Kullanıcı Adı</label>
+                                                      <input type="text" name="username" required
+                                                         [(ngModel)]="user.username" class="form-control">
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div class="row">
+                                                <div class="col">
+                                                   <div class="form-group">
+                                                      <label>E-Posta</label>
+                                                      <input type="text" name="email" required [(ngModel)]="user.email"
+                                                         class="form-control">
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div class="row">
+                                                <div class="col mb-3">
+                                                   <div class="form-group">
+                                                      <label>Rol<small [hidden]="isAdmin">(Okuma
+                                                            Amacı)</small></label>
+                                                      <select [disabled]="!isAdmin" name="role" required
+                                                         [(ngModel)]="user.role" class="form-control">
+                                                         <option value="ROLE_USER">USER
+                                                         </option>
+                                                         <option value="ROLE_HR">HR</option>
+                                                         <option value="ROLE_MANAGER">MANAGER
+                                                         </option>
+                                                         <option value="ROLE_ADMIN">ADMIN
+                                                         </option>
+                                                         <option value="ROLE_SUPER_ADMIN">
+                                                            SUPER
+                                                            ADMIN</option>
+                                                      </select>
+                                                   </div>
+                                                   <div class="form-group">
+                                                      <label for="agencyId">Şube<small [hidden]="isAdmin">(Okuma
+                                                            Amacı)</small></label>
+                                                      <span *ngIf="userAgency.value =='' " style="color: red;"><strong>
+                                                            *
+                                                         </strong></span>
+                                                      <select [disabled]="!isAdmin" name="agencyId" #userAgency
+                                                         (change)="onAgencyChange($event)" [(ngModel)]="user.agency.id"
+                                                         id="agencyId" class="form-control">
+                                                         <option value="">Bir Ajans Seçin
+                                                         </option>
+                                                         <option *ngFor="let agency of agencies" [ngValue]="agency.id">
+                                                            {{agency.agencyName}}
+                                                         </option>
+                                                      </select>
+                                                   </div>
+
+                                                   <div class="form-group">
+                                                      <label for="contact">İletişim</label>
+                                                      <span [hidden]="isPhoneValidated" style="color: red;"><strong> *
+                                                         </strong></span>
+                                                      <input id="contact" type="text"
+                                                         (keypress)="contactValidation($event)"
+                                                         (input)="onContactInputChangeControl($event)" name="contact"
+                                                         [ngModel]="user.contact" placeholder="(0555)-000-00-00"
+                                                         required class="form-control">
+                                                      <small>
+                                                         <span [hidden]="isPhoneValidated" style="color: red;">Lütfen
+                                                            geçerli bir
+                                                            numara girin</span>
+                                                      </small>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="row">
+                                          <div class="col-12 col-sm-5 offset-sm-1 mb-3">
+                                             <div class="mb-2"><b>Hesap ayarları</b></div>
+                                             <div class="row">
+                                                <div class="col">
+                                                   <div class="custom-controls-stacked px-2">
+                                                      <div class="custom-control custom-checkbox">
+                                                         <input [disabled]="!isAdmin" name="active" type="checkbox"
+                                                            [(ngModel)]="user.active" class="custom-control-input">
+                                                         <label class="custom-control-label">Aktif<small
+                                                               [hidden]="isAdmin">(Okuma
+                                                               Amacı)</small></label>
+                                                      </div>
+                                                      <div class="custom-control custom-checkbox">
+                                                         <input [disabled]="!isAdmin" name="notLocked" type="checkbox"
+                                                            [(ngModel)]="user.notLocked" class="custom-control-input">
+                                                         <label class="custom-control-label">kilidi
+                                                            açıldı<small [hidden]="isAdmin">(Okuma
+                                                               Amacı)</small></label>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="row">
+                                          <div class="col d-flex justify-content-end">
+                                             <button class="btn btn-primary" type="submit"
+                                                [disabled]="!isPhoneValidated">
+                                                <i *ngIf="refreshing" class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;
+                                                <span *ngIf="refreshing">Yükleniyor...</span>
+                                                <span *ngIf="!refreshing ">Kayıt Et</span>
+                                             </button>
+                                          </div>
+                                       </div>
+                                    </form>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-12 col-md-3 mb-3">
+                     <div class="card mb-3">
+                        <div class="card-body">
+                           <div class="px-xl-3">
+                              <button (click)="onLogOut()" class="btn btn-block btn-secondary">
+                                 <span>Çıkış Yap</span>
+                                 <i class="fas fa-sign-in-alt ml-1"></i>
+                              </button>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="card">
+                        <div class="card-body">
+                           <h6 class="card-title font-weight-bold">Rolden İzinler</h6>
+                           <h6 *ngFor="let authority of user?.authorities" class="card-text">{{authority}}
+                           </h6>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <form enctype="multipart/form-data" style="display: none;">
+      <input type="file" (change)="onProfileImageChange($event); onUpdateProfileImage()" name="profile-image-input"
+         id="profile-image-input" placeholder="file" ngModel accept="image/*" />
+   </form>
+   <!-- sifre degistirme -->
+   <div class="container" id="main-container">
+      <div class="modal fade" id="addHomeResModal" tabindex="-1" role="dialog" aria-labelledby="addHomeResModalLabel"
+         aria-hidden="true">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="addHomeResModalLabel">Şifre Değiştirme</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <form #addPassForm="ngForm" (ngSubmit)="passwordChange(addPassForm)">
+                     <div class="form-group">
+                        <label for="currentPassword">Eski Şifre</label>
+                        <input type="password" (keypress)="passwordRes()" ngModel name="currentPassword"
+                           class="form-control" id="currentPassword" placeholder="Eski Şifre" required>
+                     </div>
+                     <small style="color:red" [hidden]="!wrongPassword">Şifreniz hatalıdır. Lütfen kontrol ederek
+                        tekrar deneyin</small>
+
+                     <div class="form-group">
+                        <input hidden [ngModel]="user.username" name="username" id="usernameId" class="form-control">
+                     </div>
+                     <div class="form-group">
+                        <label for="newPassword">Yeni Şifre</label>
+                        <input (keypress)="reset()" type="password" ngModel name="newPassword" class="form-control"
+                           id="newPassword" placeholder="Yeni Şifre" required>
+                     </div>
+                     <div class="form-group">
+                        <label for="confirmPassword">Tekrar Yeni Şifre</label>
+                        <input (keypress)="reset()" type="password" ngModel name="confirmPassword" class="form-control"
+                           id="confirmPassword" placeholder="Tekar Yeni Şifre" required>
+                     </div>
+                     <small style="color:red" [hidden]="!passwordDoesnotMatch">Yeni şifreniz ve onay şifreniz
+                        eşleşmiyor</small>
+
+                     <div class="modal-footer">
+                        <button type="button" id="add-pass-home-form" class="btn btn-secondary"
+                           data-dismiss="modal">Kapat</button>
+                        <button [disabled]="addPassForm.invalid" type="submit" class="btn btn-primary">Kayıt Et</button>
+                     </div>
+
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+
+   </div>
+   <!-- requeted status menu-->
+   <div class="tab-pane fade" id="show-requested">
+      <div class="container" id="main-container">
+         <div class="row">
+            <div *ngFor="let status of statuses" class="col-md-6 col-xl-3"
+               (click)="onSelect(status,'requested-menu-home-selected')">
+               <div class="card m-b-30">
+                  <div class="card-body row">
+                     <div class=" card-title">
+                        <h5><i class="fa fa-envelope float-right"></i>
+                           {{status?.status}} </h5>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- requested data Full page -->
+   <div class="tab-pane fade" id="show-requested-homes">
+      <div class="container" id="main-container">
+         <!-- done -->
+         <!-- show data -->
+         <div class="row">
+            <div *ngFor="let requestedHome of requestedFilteredHome" class="col-md-6 col-xl-3"
+               [hidden]="showData(requestedHome)">
+               <div class="card m-b-30 show-home">
+                  <li class="list-group-item" (click)="onSelect(requestedHome,'openRequestedHomeInfo')">
+                     <h6><span [style]="'color:red;'">{{requestedHome?.status?.status}} </span>
+                        <span [style]="'color:green;'">{{requestedHome?.priority?.priority}}</span>
+                     </h6>
+                     <h6><span [style]="'color:green;'">{{requestedHome?.location}} </span><span> - </span>
+                        {{requestedHome?.roomNumber?.roomNumber}}
+                     </h6>
+                     <h6><span [style]="'color:black;'">{{requestedHome?.recipientsName}} {{requestedHome?.budget}}
+                           {{requestedHome?.currency?.currency}}
+                           {{requestedHome?.floors}}</span></h6>
+                  </li>
+                  <div class="card-body">
+                     <div class="float-right btn-group btn-group-sm">
+                        <a [hidden]="!isUserCanEdit(requestedHome)"
+                           (click)="onOpenRequestedModal(requestedHome, 'edit')" class="btn btn-primary tooltips"
+                           data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                        <a [hidden]="!isUserCanEdit(requestedHome)"
+                           (click)="onOpenRequestedModal(requestedHome, 'delete')" class="btn btn-secondary tooltips"
+                           data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <button [hidden]="true" type="button" id="openRequestedHomeInfo" data-toggle="modal"
+            data-target="#viewRequestedHomeModal"></button>
+         <button [hidden]="true" type="button" id="openUserEdit" data-toggle="modal"
+            data-target="#editUserModal"></button>
+
+         <div class="modal fade bd-example-modal-lg" id="viewRequestedHomeModal" tabindex="-1" role="dialog"
+            aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 style="color:red; text-align: left; "><i class="fa fa-envelope float-right"></i>
+                        {{selectedRequestedHomes?.status?.status}}</h5>
+                     <button type="button" class="close" data-dismiss="modal" aria-label=" Close">
+                        <span aria-hidden="true">&times;</span>
+                     </button>
+                  </div>
+                  <div class="modal-body">
+                     <ul class="list-group list-group-flush">
+
+                        <li class="list-group-item">
+                           <h6><i class="fa fa-envelope float-right"></i>Öncelik Durumu:
+                              <span style="color:green">{{selectedRequestedHomes?.priority?.priority}}</span>
+                           </h6>
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Bütce : </strong>
+                           {{selectedRequestedHomes?.budget}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Lokasyonlar :
+                           </strong>
+                           {{selectedRequestedHomes?.location}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Oda Sayısı :
+                           </strong>
+                           {{selectedRequestedHomes?.roomNumber?.roomNumber}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Katlar:
+                           </strong>
+                           {{selectedRequestedHomes?.floors}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>İlan Yetkilisi :
+                           </strong>
+                           {{selectedRequestedHomes?.user?.firstName}} {{selectedRequestedHomes?.user?.lastName}}
+                        </li>
+                        <li class="list-group-item">
+                           <i class="fa fa-envelope float-right"></i><strong>Açıklama :
+                           </strong>
+                           <span [hidden]="isLink(selectedRequestedHomes?.note)">
+                              {{selectedRequestedHomes?.note}}
+                           </span>
+                           <span [hidden]="!isLink(selectedRequestedHomes?.note)">
+                              <a href="{{selectedRequestedHomes?.note}}" style="color: black;" >{{selectedRequestedHomes?.note}}</a></span>
+                        </li>
+                     </ul>
+                  </div>
+                  <div class=" modal-footer">
+                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!-- Add HomeType Modal -->
+         <div class="modal fade" id="addRequestedHomeModal" tabindex="-1" role="dialog"
+            aria-labelledby="addRequestedHomeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="addRequestedHomeModalLabel">{{requestedStatus?.status}} Talep Ekleme
+                     </h5>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                     </button>
+                  </div>
+                  <div class="modal-body">
+                     <form #addRequestForm="ngForm" (ngSubmit)="onAddRequestedHome(addRequestForm)">
+
+                        <div class="form-group">
+                           <label for="recipientsName">Alıcının Adı</label>
+                           <input type="text" ngModel name="recipientsName" class="form-control" id="recipientsName"
+                              placeholder="Alıcının Adı" required>
+                        </div>
+
+                        <div class="form-group">
+                           <label for="priorityId">Öncelik Durumu</label>
+                           <select [ngModel]="selectedPriority?.id" name="priorityId" id="addRequestedHomePriorityId"
+                              class="form-control" required>
+                              <option *ngFor="let priority of priorities" [ngValue]="priority.id">
+                                 {{priority?.priority}} </option>
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <label for="location">Lokasyonlar</label>
+                           <input type="text" ngModel name="location" class="form-control"
+                              id="addRequestedHomeLocationId" placeholder="Lokasyonlar" required>
+                        </div>
+                        <div class="form-group">
+                           <label for="budget">Bütce</label>
+                           <input type="text" (keypress)="controlValue($event)" ngModel name="budget"
+                              class="form-control" id="addBudgetId" placeholder="Bütce" required>
+                           <label for="currencyId">Birim : </label>
+                           <select [ngModel]="selectedCurrency?.id" name="currencyId" id="addHomeTypeCurrencyId"
+                              class="form-control">
+                              <option *ngFor="let currency of currencies" [ngValue]="currency.id">
+                                 {{currency.currency}} </option>
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <label for="roomNumberId">Oda Sayısı</label>
+                           <select [ngModel]="selectedRoomNumber?.id" name="roomNumberId"
+                              id="addRequestedHomeRoomNumberId" class="form-control" required>
+                              <option *ngFor="let roomNumber of roomNumbers" [ngValue]="roomNumber.id">
+                                 {{roomNumber.roomNumber}} </option>
+                           </select>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                           <label for="floors">Katlar</label>
+                           <input type="text" ngModel name="floors" class="form-control" id="addHomefloorNumberId"
+                              placeholder="Bulunduğu kat" required>
+                        </div>
+                        <div class="form-group">
+                           <input [hidden]="true" [ngModel]="user.userId" name="userId" id="requestedHomeUserId"
+                              class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                           <input [hidden]="true" [ngModel]="requestedStatus?.id" name="statusId"
+                              id="addRequestedHomestatusId" class="form-control">
+                        </div>
+                        <div class="form-group">
+                           <label for="note">Not</label>
+                           <textarea type="text" [style]="'resize:none;'" ngModel name="note" class="form-control"
+                              id="note" placeholder="Not..." required></textarea>
+                        </div>
+                        <div class="modal-footer">
+                           <button type="button" id="add-requested-home-form" class="btn btn-secondary"
+                              data-dismiss="modal">Kapat</button>
+                           <button [disabled]="addRequestForm.invalid" type="submit" class="btn btn-primary">Kayıt
+                              Et</button>
+                        </div>
+
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!-- Edit Modal -->
+         <div class="modal fade" id="updateRequestedHomeModal" tabindex="-1" role="dialog"
+            aria-labelledby="HomeTypeEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="updateHomeTypeModalLabel">{{requestedStatus?.status}}Talep Güncelle
+                     </h5>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                     </button>
+                  </div>
+                  <div class="modal-body">
+                     <form #editRequestedForm="ngForm">
+                        <div class="form-group">
+                           <label for="recipientsName">Alıcının Adı</label>
+                           <input type="text" [ngModel]="editRequestedHome?.recipientsName" name="recipientsName"
+                              class="form-control" id="hearecipientsNameder" placeholder="Başlık Giriniz" required>
+                        </div>
+                        <!-- select priority -->
+                        <div class="form-group">
+                           <label for="priorityId">Öncelik Durumu</label>
+                           <select [ngModel]="editRequestedHome?.priority?.id" name="priorityId"
+                              id="editRequestedHomePriorityId" class="form-control">
+                              <option *ngFor="let priority of priorities" [ngValue]="priority.id">
+                                 {{priority.priority}} </option>
+                           </select>
+                        </div>
+                        <!-- Location Input -->
+                        <div class="form-group">
+                           <label for="location">Adres : </label>
+                           <input type="text" [ngModel]="editRequestedHome?.location" name="location"
+                              class="form-control" id="editRequestedHomeLocationId" placeholder="Location" required>
+                        </div>
+                        <!-- budget input   -->
+                        <div class="form-group">
+                           <label for="budget">Bütce</label>
+                           <input type="text" (keypress)="controlValue($event)" [ngModel]="editRequestedHome?.budget"
+                              name="budget" class="form-control" id="editbudgetId" placeholder="Bütce" required>
+                           <select [ngModel]="editRequestedHome?.currency?.id" name="currencyId" id="budgetCurrencyId"
+                              class="form-control">
+                              <option *ngFor="let currency of currencies" [ngValue]="currency.id">
+                                 {{currency.currency}} </option>
+                           </select>
+                        </div>
+                        <!-- select Room number -->
+                        <div class="form-group">
+                           <label for="roomNumberId">Oda Sayısı : </label>
+                           <select [ngModel]="editRequestedHome?.roomNumber?.id" name="roomNumberId"
+                              id="editRequestedHomeRoomNumberId" class="form-control">
+                              <option *ngFor="let roomNumber of roomNumbers" [ngValue]="roomNumber.id">
+                                 {{roomNumber.roomNumber}} </option>
+                           </select>
+                        </div>
+
+                        <!-- floors  -->
+                        <div class="form-group">
+                           <label for="floors">Katlar</label>
+                           <input type="text" [ngModel]="editRequestedHome?.floors" name="floors" class="form-control"
+                              id="floors" placeholder="katlar" required>
+                        </div>
+                        <!-- select User  -->
+                        <div class="form-group">
+                           <input [hidden]="true" [ngModel]="user.userId" name="userId" id="requestedHomeEditUserId"
+                              class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                           <input [hidden]="true" [ngModel]="editRequestedHome?.status?.id" name="statusId"
+                              id="editRequestedHomeStatusId" class="form-control">
+                        </div>
+                        <!-- Note Input -->
+                        <div class="form-group">
+                           <label for="note">Not</label>
+                           <textarea type="text" [ngModel]="editRequestedHome?.note" name="note" class="form-control"
+                              [style]="'resize:none;'" id="editnoteId" placeholder="Not..." required></textarea>
+                        </div>
+                        <input type="hidden" [ngModel]="editRequestedHome?.id" name="id" class="form-control"
+                           id="editRequestedHomeId">
+                        <div class="modal-footer">
+                           <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Kapat</button>
+                           <button (click)="onRequestedHomesUpdate(editRequestedForm)" data-dismiss="modal"
+                              class="btn btn-primary">Kayıt
+                              et</button>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!-- Delete Modal -->
+         <div class="modal fade" id="deleteRequestedHomeModal" tabindex="-1" role="dialog"
+            aria-labelledby="deleteModelLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+               <!-- User HomeType -->
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="deleteModelLabel">Emlak Silme</h5>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                     </button>
+                  </div>
+                  <!-- Button -->
+                  <div class="modal-body">
+                     <p> talepi silmek ister misiniz?</p>
+                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hayır</button>
+                        <button (click)="onRequestedDeleteHome(deleteRequestedHome.id)" class="btn btn-danger"
+                           data-dismiss="modal">Evet</button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div *ngIf="requestedFilteredHome?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+         <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Talep Yok!</h4>
+            <p>Herhangi bir sonuç bulunmadı.</p>
+         </div>
+      </div>
+   </div>
+</div>

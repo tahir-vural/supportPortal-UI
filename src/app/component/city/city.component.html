@@ -1,0 +1,139 @@
+<nav class="navbar topbar navbar-expand-lg navbar-dark">
+    <a class="navbar-brand head-title" style="color:white;">Şehirler</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
+        aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor02">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <!-- add City button -->
+                <a class="nav-link" (click)="onOpenModal(null, 'add')"> Şehir Ekle <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input type="search" (ngModelChange)="search(key?.value)" #key="ngModel" ngModel name="key" id="searchName"
+                class="form-control mr-sm-2" placeholder="Şehir ara..." required>
+        </form>
+    </div>
+</nav>
+
+<!--Show data  -->
+<div class="container" id="main-container">
+    <div class="row">
+        <div *ngFor="let city of cities" class="col-md-6 col-xl-3">
+            <div class="card m-b-30">
+                <div class="card-body row">
+                    <div class="col-4 card-title align-self-center mb-0">
+                        <h5>{{city?.name | titlecase}}</h5>
+                    </div>
+                 
+                </div>
+               
+                <div class="card-body">
+                    <div class="float-right btn-group btn-group-sm">
+                        <!-- edit City button-->
+                        <a (click)="onOpenModal(city, 'edit')" class="btn btn-primary tooltips" data-placement="top"
+                            data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                            <!-- delete City button -->
+                        <a (click)="onOpenModal(city, 'delete')" class="btn btn-secondary tooltips" data-placement="top"
+                            data-original-title="Delete"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add City Modal -->
+    <div class="modal fade" id="addCityModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel"
+       aria-hidden="true">
+       <div class="modal-dialog" role="document">
+          <div class="modal-content">
+             <div class="modal-header">
+                <h5 class="modal-title" id="addEmployeeModalLabel">Şehir Ekle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+                </button>
+             </div>
+             <div class="modal-body">
+                <form #addForm="ngForm" (ngSubmit)="onAddCity(addForm)" >
+                   <div class="form-group">
+                      <label for="name">Şehir Adı</label>
+                      <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Şehir adı" required>
+                   </div>
+                   
+                   <div class="modal-footer">
+                      <button type="button" id="add-city-form" class="btn btn-secondary"
+                         data-dismiss="modal">Kapat</button>
+                      <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Kayıt Et</button>
+                   </div>
+                </form>
+             </div>
+          </div>
+       </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="updateCityModal" tabindex="-1" role="dialog" aria-labelledby="employeeEditModalLabel"
+       aria-hidden="true">
+       <div class="modal-dialog" role="document">
+          <div class="modal-content">
+             <div class="modal-header">
+                <h5 class="modal-title" id="updateEmployeeModalLabel">Şehir düzenle {{editCity?.name}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+                </button>
+             </div>
+             <div class="modal-body">
+                <form #editForm="ngForm">
+                   <div class="form-group">
+                      <label for="name">Şehir Adı</label>
+                      <input type="text" [ngModel]="editCity?.name" name="name" class="form-control" id="name"
+                         aria-describedby="emailHelp" placeholder="Şehir adı">
+                   </div>
+                   <!-- <input type="hidden" ngModel="{{editCity?.id}}" name="id" class="form-control" id="id"
+                      placeholder="Email"> -->
+                   
+                   <div class="modal-footer">
+                      <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Kapat</button>
+                      <button (click)="onUpdateCity(editForm.value)" data-dismiss="modal" class="btn btn-primary">Kayıt Et</button>
+                   </div>
+                </form>
+             </div>
+          </div>
+       </div>
+    </div>
+ 
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteCityModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+       aria-hidden="true">
+       <div class="modal-dialog" role="document">
+          <div class="modal-content">
+             <div class="modal-header">
+                <h5 class="modal-title" id="deleteModelLabel">Şehir Silme</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+                </button>
+             </div>
+             <div class="modal-body">
+                <p> <strong>{{deleteCity?.name}}</strong> şehri silmek ister misiniz?</p>
+                <div class="modal-footer">
+                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Hayır</button>
+                   <button (click)="onDeleteCity(deleteCity.id)" class="btn btn-danger" data-dismiss="modal">Evet</button>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+
+    <!-- Notification for no employees -->
+    <div *ngIf="cities?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+    <div class="alert alert-info" role="alert">
+       <h4 class="alert-heading">Şehir bulunamadı!</h4>
+       <p>Herhangi bir şehir kaydı bulunamadı.</p>
+    </div>
+ </div>

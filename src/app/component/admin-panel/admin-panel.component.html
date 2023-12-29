@@ -1,0 +1,203 @@
+<div class="admin-panel">
+    <a id="menu-button" (click)="showMenu()"><i class="fa fa-navicon"></i></a>
+    <div class="nav-side hide" id="navSide">
+        <ul>
+            <li>
+                <a routerLink="/admin/main" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routed('main','Ana Sayfa')">
+                    Ana Sayfa
+                </a>
+            </li>
+
+            <li>
+                <a routerLink="/admin/branches" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routed('branches','Şubeler')">
+                    Şube
+                </a>
+            </li>
+
+            <li>
+                <a routerLink="/admin/cities" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routed('cities','Şehirler')">
+                    Sehirler
+                </a>
+                <ul>
+                    <li>
+                        <a routerLink="/admin/districts" routerLinkActive="active"
+                            [routerLinkActiveOptions]="{exact:true}" (click)="routed('districts','İlçeler')">
+                            İlçe
+                        </a>
+                        <ul>
+                            <li>
+                                <a routerLink="/admin/neighbourhoods" routerLinkActive="active"
+                                    [routerLinkActiveOptions]="{exact:true}"
+                                    (click)="routed('neighbourhoods','Mahalleler')">
+                                    Mah
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a routerLink="/admin/currencies" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routed('currencies','Para birimi')">
+                    Para Birimi
+                </a>
+            </li>
+
+            <li>
+                <a routerLink="/admin/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routed('users','Kullanıcılar')">
+                    Kullanıcılar
+                </a>
+            </li>
+
+            <li>
+                <a routerLink="/admin/priority" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routed('priority','Öncelik Durmu')">
+                    Öncelik Durmu
+                </a>
+            </li>
+            <li>
+                <a routerLink="/admin/requested-homes" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact:true}" (click)="routed('requested-homes','Talepler')">
+                    Talepler
+                </a>
+            </li>
+            <li>
+                <a routerLink="/admin/room-numbers" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routed('room-numbers','Oda Sayısı')">
+                    Oda Sayısı
+                </a>
+            </li>
+            <li>
+                <a routerLink="/admin/home-types" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routed('home-types','Emlak Türleri')">
+                    Emlak Tipi
+                </a>
+            </li>
+            <li>
+                <a routerLink="/admin/home-status" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routed('home-status','Emlak Durumu')">
+                    Emlak Durumu
+                </a>
+            </li>
+            <li>
+                <a routerLink="/admin/type" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routed('type','Tür')">
+                    Tipi
+                </a>
+            </li>
+            <li>
+                <a routerLink="/admin/profile" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routed('profile','Profil')">
+                    Profil
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="nav-side" [hidden]="!showMenus">
+        <ul>
+            <li>
+                <a routerLink="/admin/main" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routedHiden('main','Ana Sayfa')" >
+                    Ana Sayfa
+                </a>
+            </li>
+
+            <li>
+                <a routerLink="/admin/branches" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routedHiden('branches','Şubeler')">
+                    Şube
+                </a>
+            </li>
+
+            <li>
+                <a routerLink="/admin/cities" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routedHiden('cities','Şehirler')">
+                    Sehirler
+                </a>
+                <ul>
+                    <li>
+                        <a routerLink="/admin/districts" routerLinkActive="active"
+                            [routerLinkActiveOptions]="{exact:true}" (click)="routedHiden('districts','İlçeler')">
+                            İlçe
+                        </a>
+                        <ul>
+                            <li>
+                                <a routerLink="/admin/neighbourhoods" routerLinkActive="active"
+                                    [routerLinkActiveOptions]="{exact:true}"
+                                    (click)="routedHiden('neighbourhoods','Mahalleler')">
+                                    Mah
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a routerLink="/admin/currencies" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routedHiden('currencies','Para birimi')">
+                    Para Birimi
+                </a>
+            </li>
+
+            <li>
+                <a routerLink="/admin/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routedHiden('users','Kullanıcılar')">
+                    Kullanıcılar
+                </a>
+            </li>
+
+            <li>
+                <a routerLink="/admin/priority" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routedHiden('priority','Öncelik Durmu')">
+                    Öncelik Durmu
+                </a>
+            </li>
+            <li>
+                <a routerLink="/admin/requested-homes" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact:true}" (click)="routedHiden('requested-homes','Talepler')">
+                    Talepler
+                </a>
+            </li>
+            <li>
+                <a routerLink="/admin/room-numbers" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routedHiden('room-numbers','Oda Sayısı')">
+                    Oda Sayısı
+                </a>
+            </li>
+            <li>
+                <a routerLink="/admin/home-types" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routedHiden('home-types','Emlak Türleri')">
+                    Emlak Tipi
+                </a>
+            </li>
+            <li>
+                <a routerLink="/admin/home-status" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routedHiden('home-status','Emlak Durumu')">
+                    Emlak Durumu
+                </a>
+            </li>
+            <li>
+                <a routerLink="/admin/type" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routedHiden('type','Tür')">
+                    Tipi
+                </a>
+            </li>
+            <li>
+                <a routerLink="/admin/profile" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+                    (click)="routedHiden('profile','Profil')">
+                    Profil
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+</div>
